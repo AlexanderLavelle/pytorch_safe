@@ -139,11 +139,11 @@ class Embedding(Module):
         self.norm_type = norm_type
         self.scale_grad_by_freq = scale_grad_by_freq
         if _weight is None:
-            self.weight = Parameter(torch.empty((num_embeddings, embedding_dim), **factory_kwargs),
+            self.weight = Parameter(ko.empty((num_embeddings, embedding_dim), **factory_kwargs),
                                     requires_grad=not _freeze)
             self.reset_parameters()
         else:
-            assert list(_weight.shape) == [num_embeddings, embedding_dim], \
+            assert list(ko.shape(_weight)) == [num_embeddings, embedding_dim], \
                 'Shape of weight does not match num_embeddings and embedding_dim'
             self.weight = Parameter(_weight, requires_grad=not _freeze)
 
@@ -207,9 +207,9 @@ class Embedding(Module):
             >>> embedding(input)
             tensor([[ 4.0000,  5.1000,  6.3000]])
         """
-        assert embeddings.dim() == 2, \
+        assert ko.ndim(embeddings) == 2, \
             'Embeddings parameter is expected to be 2-dimensional'
-        rows, cols = embeddings.shape
+        rows, cols = ko.shape(embeddings)
         embedding = cls(
             num_embeddings=rows,
             embedding_dim=cols,
@@ -336,10 +336,10 @@ class EmbeddingBag(Module):
                 padding_idx = self.num_embeddings + padding_idx
         self.padding_idx = padding_idx
         if _weight is None:
-            self.weight = Parameter(torch.empty((num_embeddings, embedding_dim), **factory_kwargs))
+            self.weight = Parameter(ko.empty((num_embeddings, embedding_dim), **factory_kwargs))
             self.reset_parameters()
         else:
-            assert list(_weight.shape) == [num_embeddings, embedding_dim], \
+            assert list(ko.shape(_weight).shape) == [num_embeddings, embedding_dim], \
                 'Shape of weight does not match num_embeddings and embedding_dim'
             self.weight = Parameter(_weight)
         self.mode = mode
@@ -436,7 +436,7 @@ class EmbeddingBag(Module):
             >>> embeddingbag(input)
             tensor([[ 2.5000,  3.7000,  4.6500]])
         """
-        assert embeddings.dim() == 2, \
+        assert ko.ndim(embeddings) == 2, \
             'Embeddings parameter is expected to be 2-dimensional'
         rows, cols = embeddings.shape
         embeddingbag = cls(
